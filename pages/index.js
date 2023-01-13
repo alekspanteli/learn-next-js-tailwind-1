@@ -1,8 +1,18 @@
 import Head from "next/head";
-import Link from "next/link";
+// import Link from "next/link";
 import Layout, { siteTitle } from "../components/layout";
+import { getSortedPostsData } from '../lib/posts';
 
-export default function Home() {
+export async function getStaticProps() {
+  const allPostsData = getSortedPostsData();
+  return {
+    props: {
+      allPostsData,
+    },
+  };
+}
+
+export default function Home({ allPostsData }) {
   return (
     <div>
       <Layout home>
@@ -18,6 +28,21 @@ export default function Home() {
             <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
           </p>
         </section>
+
+        <section className="py-5">
+        <h2 className="text-3xl mb-3 font-bold">Blog</h2>
+        <ul className="flex flex-col gap-3">
+          {allPostsData.map(({ id, date, title }) => (
+            <li className="text-xl" key={id}>
+              {title}
+              <br />
+              {id}
+              <br />
+              {date}
+            </li>
+          ))}
+        </ul>
+      </section>
       </Layout>
     </div>
   );
